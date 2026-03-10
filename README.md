@@ -41,3 +41,5 @@ Pour atteindre un équilibre entre biodiversité et sécurité des infrastructur
 Le corridor qu'on souhaite aménager se découpe en 200 parcelles, qui sont toutes initialement vides (on vient de dégager le trajet pour la ligne à haute tension), mais vous pouvez planter jusqu'à 50 parcelles avec un mélange de buissons de votre choix.
 
 Identifiez (i) une population initiale et (ii) une matrice de transition, qui décrit les caractéristiques des espèces à planter, qui permettent de garantir que les critères fixés seront respectés dans au moins 80% des simulations. Comparez ces résultats aux résultats d'un modèle non stochastique.
+
+ajouter dans readme : abstract (résumé de l'intro)

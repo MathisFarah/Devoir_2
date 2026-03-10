@@ -2,14 +2,14 @@
 # title: Titre du travail
 # repository: tpoisot/BIO245-modele
 # auteurs:
-#    - nom: Auteur
-#      prenom: Premier
+#    - nom: Farah-Lajoie
+#      prenom: Mathis
 #      matricule: XXXXXXXX
-#      github: premierAuteur
-#    - nom: Auteur
-#      prenom: Deuxième
-#      matricule: XXXXXXXX
-#      github: DeuxiAut
+#      github: XXXXXX
+#    - nom: Fournier
+#      prenom: Rosanne
+#      matricule: 20332066
+#      github: rosannefournier
 # ---
 
 # # Introduction
@@ -26,7 +26,6 @@ using CairoMakie
 
 # ## Une autre section
 
-# allo test 123
 """
     foo(x, y)
 
