@@ -1,9 +1,3 @@
-# Dépôt modèle pour le cours BIO 2045
-
-## Organisation du projet
-
-## ETC
-
 ## Consignes 
 En utilisant le code de la séance sur les modèles de transition végétale, simulez une intervention et évaluez son efficacité. Les consignes spécifiques sont dans les instructions de l'activité.
 Ce travail reprend le code pour la séance sur les transitions végétales. On vous demande d'introduire une deuxième espèce de buissons, afin de simuler l'aménagement d'un corridor sous une ligne électrique à haute tension.
