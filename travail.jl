@@ -14,17 +14,42 @@
 
 # # Introduction
 
+# Dans cette simulation, un corridor sous une lignée électrique à haute tension est aménagé. Celui-ci est 
+# établit tout en respectant des consignes, pour garantir la biodiversité et les réglements de sécurité de 
+# l'infrasctructure avec une deuxième espèce de buisson, un rosier. Ce buisson est le choix parfait, car il 
+# est important pour favoriser la connectivité écologique avec sa floraison, l'attraction de pollinisateur 
+# et la petite faune qu'il apportera. De plus, il possède une grandeur qui ne sera pas néfaste pour les
+# lignes électriques.
+
 # # Présentation du modèle
 
+# Pour modéliser cette dynamique, on utilise la chaine de Markov. C'est un modèle de transitions par états,
+# où chaque passerelle peut évoluer à différents états ; vide, herbe, pivoine ou rosier. Les parcelles transitent 
+# d'un état à un autre selon une matrice de probabilités. Le modèle peut être appliqué de manière déterministe 
+# avec des valeurs théoriques continues et de manière stochastique avec des nombres entiers, rendant le tout plus 
+# réaliste. La chaine de Markov est un processus sans mémoire, l'état futur de la pacerelle dépend seulement de son
+# état actuel.
+
 # # Implémentation
+
+# On simule le nouveau corridor de 200 parcelles vides, dont jusqu'à 50 de celles-ci peuvent êtres plantées 
+# avec les deux sortes de buisson (pivoine et rosier). L'objectif est que dans 80% des simulations, 
+# il doit avoir 20% des parcelles végétalisées (30% des herbes et 70% des buissons, dont au moins 30% de l'espèce 
+# minoritaire). Quelle doit être la population initiale et quelle sera la matrice de transition pour respecter cet 
+# objectif? Il doit y avoir une mélange équilibré entre les deux espèces de buissons à des probabilités de transitions 
+# favorables pour leur permettre de coexister.
 
 # ## Packages nécessaires
 
 import Random
-Random.seed!(123456)
+Random.seed!(2045)
+
+import CairoMakie
 using CairoMakie
 
-# ## Une autre section
+import Distributions
+using Distributions
+# ## Documentation des fonctions
 
 """
     foo(x, y)
@@ -36,11 +61,8 @@ function foo(x, y)
     return nothing
 end
 
-using CairoMakie
-using Distributions
 
-import Random
-Random.seed!(2045)
+
 
 function check_transition_matrix!(T)
     for ligne in axes(T, 1)
@@ -113,7 +135,7 @@ states_colors = [:grey40, :orange, :teal]
 f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
-# Stochastic simulation
+# Simulation stochastique
 for _ in 1:10
     sto_sim = simulation(T, s; stochastic=true, generations=200)
     for i in eachindex(s)
@@ -121,7 +143,7 @@ for _ in 1:10
     end
 end
 
-# Deterministic simulation
+# Simulation déterministe
 det_sim = simulation(T, s; stochastic=false, generations=200)
 for i in eachindex(s)
     lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i])

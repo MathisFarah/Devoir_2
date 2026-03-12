@@ -1,6 +1,7 @@
 ## Consignes 
-En utilisant le code de la séance sur les modèles de transition végétale, simulez une intervention et évaluez son efficacité. Les consignes spécifiques sont dans les instructions de l'activité.
-Ce travail reprend le code pour la séance sur les transitions végétales. On vous demande d'introduire une deuxième espèce de buissons, afin de simuler l'aménagement d'un corridor sous une ligne électrique à haute tension.
+En utilisant le code de la séance sur les modèles de transition végétale, simulez une intervention et évaluez son efficacité. Les consignes spécifiques sont dans les instructions de l'activité. 
+
+On vous demande d'introduire une deuxième espèce de buissons, afin de simuler l'aménagement d'un corridor sous une ligne électrique à haute tension.
 
 Pour atteindre un équilibre entre biodiversité et sécurité des infrastructures, on établit le mandat suivant: à l'équilibre, il faut que 20% des parcelles soient végétalisées, et que parmi ces 20%, 30% soient des herbes, et 70% soient des buissons. Il faut que la variété de buisson la moins abondante ne représente pas moins de 30% du total des parcelles occupées par des buissons.
 
