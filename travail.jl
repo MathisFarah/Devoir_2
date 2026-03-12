@@ -67,9 +67,8 @@ function foo(x, y)
     return nothing
 end
 
-## Vérification de la matrice de transition
-# S'assurer que chaque ligne de la matrice a une somme de 1
-# Sinon, un message d'erreur apparaitera dans le terminal
+# ## Vérification de la matrice de transition
+# S'assurer que chaque ligne de la matrice a une somme de 1. Sinon, un message d'erreur apparaitera dans le terminal
 # Le "!" permet de modifier la matrice de la fonction en mémoire
 
 function check_transition_matrix!(T)
@@ -150,7 +149,7 @@ patches = sum(s)        # Nombre de parcelles
 
 T = zeros(Float64, states, states)
 T[1, :] = [110, 8, 0]               # Probabilités depuis l'état vide
-T[2, :] = [2, 120, 3]               # Proabilités depuis l'état herbe
+T[2, :] = [2, 120, 3]               # Probabilités depuis l'état herbe
 T[3, :] = [1, 0, 94]                # Probabilités depuis l'état pivoine
 
 # Noms et couleurs des états pour la légende
@@ -179,7 +178,7 @@ for i in eachindex(s)
     lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i])
 end
 
-# Paramètres pour le graphique : légende, limite des axes 
+# Paramètres pour le graphique : légende et limite des axes 
 
 axislegend(ax)
 tightlimits!(ax)
