@@ -147,22 +147,30 @@ function simulation(transitions, states; generations=500, stochastic=false)
 end
 
 # ## États
-# Vide, Herbe, Pivoine
-s = [0, 500, 0]         # Vecteur initial
+# Vide, Herbe, Pivoine, Rosiers
+s = [150, 25, 15, 10]         # Vecteur initial
 states = length(s)      # Nombre d'états
 patches = sum(s)        # Nombre de parcelles
 
 # ## Matrice de transition
-
+# Matrice stochastique
 T = zeros(Float64, states, states)
-T[1, :] = [110, 8, 0]               # Probabilités depuis l'état vide
-T[2, :] = [2, 120, -3]               # Probabilités depuis l'état herbe
-T[3, :] = [1, 0, 94]                # Probabilités depuis l'état pivoine
+T[1, :] = [0.81, 0.05, 0.07, 0.07]               # Probabilités depuis l'état vide
+T[2, :] = [0.76, 0.20, 0.02, 0.02]               # Probabilités depuis l'état herbe
+T[3, :] = [0.78, 0.10, 0.10, 0.02]               # Probabilités depuis l'état pivoine
+T[4, :] = [0.83, 0.02, 0.05, 0.10]               # Probabilités depuis l'état rosiers
+
+# Matrice déterministe
+# T = zeros(Float64, states, states)
+# T[1, :] = [81, 5, 7, 7]               # Probabilités depuis l'état vide
+# T[2, :] = [76, 20, 2, 2]               # Probabilités depuis l'état herbe
+# T[3, :] = [78, 10, 10, 2]               # Probabilités depuis l'état pivoine
+# T[4, :] = [83, 2, 5, 10]               # Probabilités depuis l'état rosiers
 
 # Noms et couleurs des états pour la légende
 
-states_names = ["Vide", "Herbe", "Pivoine"]
-states_colors = [:grey40, :orange, :teal]
+states_names = ["Vide", "Herbe", "Pivoine", "Rosiers"]
+states_colors = [:grey40, :orange, :teal, :pink]
 
 # ## Visualisation
 
@@ -195,6 +203,6 @@ current_figure()
 
 # La figure suivante représente des valeurs aléatoires:
 
-hist(randn(100))
+#hist(randn(100))
 
 # # Discussion
