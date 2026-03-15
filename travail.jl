@@ -4,8 +4,8 @@
 # auteurs:
 #    - nom: Farah-Lajoie
 #      prenom: Mathis
-#      matricule: XXXXXXXX
-#      github: XXXXXX
+#      matricule: 20280102
+#      github: MathisFarah
 #    - nom: Fournier
 #      prenom: Rosanne
 #      matricule: 20332066
@@ -90,7 +90,14 @@ function check_function_arguments(transitions, states)
     end
 
     if size(transitions, 1) != length(states)
-        throw("Le nombre d'états ne correspond psa à la matrice de transition")
+        throw("Le nombre d'états ne correspond pas à la matrice de transition")
+    end
+    for lignes in axes(transitions, 1)
+        for colonnes in axes(transitions, 2)
+            if transitions[lignes, colonnes] < 0
+                throw("La valeur de transition a la position $(lignes) $(colonnes) est inférieur a 0")
+            end
+        end
     end
     return nothing
 end
@@ -149,7 +156,7 @@ patches = sum(s)        # Nombre de parcelles
 
 T = zeros(Float64, states, states)
 T[1, :] = [110, 8, 0]               # Probabilités depuis l'état vide
-T[2, :] = [2, 120, 3]               # Probabilités depuis l'état herbe
+T[2, :] = [2, 120, -3]               # Probabilités depuis l'état herbe
 T[3, :] = [1, 0, 94]                # Probabilités depuis l'état pivoine
 
 # Noms et couleurs des états pour la légende
