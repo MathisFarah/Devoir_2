@@ -170,7 +170,7 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles", limits = (1, 50, 0, 200))
 
 # Simulation stochastique
-nb_sim = 200
+nb_sim = 2000
 equilibre_vide = zeros(nb_sim)
 equilibre_herbe = zeros(nb_sim)
 equilibre_pivoine = zeros(nb_sim)
