@@ -167,10 +167,10 @@ states_colors = [:grey40, :orange, :teal, :pink]
 # ## Visualisation
 
 f = Figure()
-ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
+ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles", limits = (1, 50, 0, 200))
 
 # Simulation stochastique
-nb_sim = 2000
+nb_sim = 200
 equilibre_vide = zeros(nb_sim)
 equilibre_herbe = zeros(nb_sim)
 equilibre_pivoine = zeros(nb_sim)
@@ -209,10 +209,10 @@ f
 # À l'aide de la simulation déterministe, il est osbervable que chacun des états atteint son équilibre très rapidement, soit après moins
 # de 5 générations. Les nombreuses simulations stochastique semblent suivrent la simulation déterministe.
 h = Figure()
-hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
-hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
-hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
-hist(h[2, 2], equilibre_rosiers, color = :pink, axis = (title = "Équilibre Rosiers", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
+hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Pacerelles (%)", ylabel = "Fréquence", limits = (70, 90, 0, 50)))
+hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Pacerelles (%)", ylabel = "Fréquence", limits = (0, 15, 0, 50)))
+hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Pacerelles (%)", ylabel = "Fréquence", limits = (0, 16, 0, 50)))
+hist(h[2, 2], equilibre_rosiers, color = :pink, axis = (title = "Équilibre Rosiers", xlabel = "Pacerelles (%)", ylabel = "Fréquence", limits = (0, 12, 0, 60)))
 h
 
 # Figure 2 : Fréquence de chacun des états possibles des pacerelles selon leur pourcentage d'occupation à la fin des simulations stochastiques (en équilibre) 
