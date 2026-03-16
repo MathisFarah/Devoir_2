@@ -19,7 +19,7 @@
 # l'infrasctructure avec une deuxième espèce de buisson, un rosier. Ce buisson est le choix parfait, car il 
 # est important pour favoriser la connectivité écologique avec sa floraison, l'attraction de pollinisateur 
 # et la petite faune qu'il apportera. De plus, il possède une grandeur qui ne sera pas néfaste pour les
-# lignes électriques.
+# lignes électriques @HydroQuebec2025.
 
 # # Présentation du modèle
 
@@ -28,7 +28,7 @@
 # d'un état à un autre selon une matrice de probabilités. Le modèle peut être appliqué de manière déterministe 
 # avec des valeurs théoriques continues et de manière stochastique avec des nombres entiers, rendant le tout plus 
 # réaliste. La chaine de Markov est un processus sans mémoire, l'état futur de la pacerelle dépend seulement de son
-# état actuel.
+# état actuel @Balzter2000.
 
 # # Implémentation
 
@@ -56,16 +56,6 @@ using CairoMakie
 
 import Distributions
 using Distributions
-# ## Documentation des fonctions
-
-"""
-    foo(x, y)
-
-Cette fonction ne fait rien.
-"""
-function foo(x, y)
-    return nothing
-end
 
 # ## Vérification de la matrice de transition
 # S'assurer que chaque ligne de la matrice a une somme de 1. Sinon, un message d'erreur apparaitera dans le terminal
@@ -95,7 +85,7 @@ function check_function_arguments(transitions, states)
     for lignes in axes(transitions, 1)
         for colonnes in axes(transitions, 2)
             if transitions[lignes, colonnes] < 0
-                throw("La valeur de transition a la position $(lignes) $(colonnes) est inférieur a 0")
+                throw("La valeur de transition à la position $(lignes) $(colonnes) est inférieur a 0")
             end
         end
     end
@@ -149,8 +139,8 @@ end
 # ## États
 # Vide, Herbe, Pivoine, Rosiers
 s = [150, 40, 10, 0]         # Vecteur initial
-states = length(s)      # Nombre d'états
-patches = sum(s)        # Nombre de parcelles
+states = length(s)           # Nombre d'états
+patches = sum(s)             # Nombre de parcelles
 
 # ## Matrice de transition
 T = zeros(Float32, states, states)
