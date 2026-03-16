@@ -129,7 +129,7 @@ function simulation(transitions, states; generations=500, stochastic=false)
     check_transition_matrix!(transitions)
     check_function_arguments(transitions, states)
 
-    _data_type = stochastic ? Int64 : Float32                           # Choisit le type de données
+    _data_type = stochastic ? Int64 : Float32                           # Selon le type de données, choisi renvoie si stochastic est vrai ou faux
     timeseries = zeros(_data_type, length(states), generations + 1)     # Créer une matrice vide pour stocker les résultats
     timeseries[:, 1] = states                                           # Initialise la première colonne avec l'état initial
 
@@ -148,24 +148,16 @@ end
 
 # ## États
 # Vide, Herbe, Pivoine, Rosiers
-s = [150, 25, 15, 10]         # Vecteur initial
+s = [150, 40, 10, 0]         # Vecteur initial
 states = length(s)      # Nombre d'états
 patches = sum(s)        # Nombre de parcelles
 
 # ## Matrice de transition
-# Matrice stochastique
-T = zeros(Float64, states, states)
-T[1, :] = [0.81, 0.05, 0.07, 0.07]               # Probabilités depuis l'état vide
-T[2, :] = [0.76, 0.20, 0.02, 0.02]               # Probabilités depuis l'état herbe
+T = zeros(Float32, states, states)
+T[1, :] = [0.81, 0.05, 0.09, 0.05]               # Probabilités depuis l'état vide
+T[2, :] = [0.76, 0.20, 0.03, 0.01]               # Probabilités depuis l'état herbe
 T[3, :] = [0.78, 0.10, 0.10, 0.02]               # Probabilités depuis l'état pivoine
-T[4, :] = [0.83, 0.02, 0.05, 0.10]               # Probabilités depuis l'état rosiers
-
-# Matrice déterministe
-# T = zeros(Float64, states, states)
-# T[1, :] = [81, 5, 7, 7]               # Probabilités depuis l'état vide
-# T[2, :] = [76, 20, 2, 2]               # Probabilités depuis l'état herbe
-# T[3, :] = [78, 10, 10, 2]               # Probabilités depuis l'état pivoine
-# T[4, :] = [83, 2, 5, 10]               # Probabilités depuis l'état rosiers
+T[4, :] = [0.83, 0.02, 0.08, 0.07]               # Probabilités depuis l'état rosiers
 
 # Noms et couleurs des états pour la légende
 
@@ -178,19 +170,29 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Simulation stochastique
+nb_sim = 1000
+equilibre_vide = zeros(nb_sim)
+equilibre_herbe = zeros(nb_sim)
+equilibre_pivoine = zeros(nb_sim)
+equilibre_rosiers = zeros(nb_sim)
 
-for _ in 1:10
-    sto_sim = simulation(T, s; stochastic=true, generations=200)
-    for i in eachindex(s)
-        lines!(ax, sto_sim[i, :], color=states_colors[i], alpha=0.2)
+for i in 1:nb_sim
+    sto_sim = simulation(T, s; stochastic=true, generations=100)
+
+    equilibre_vide[i] = sto_sim[1, end]/patches
+    equilibre_herbe[i] = sto_sim[2, end]/patches
+    equilibre_pivoine[i] = sto_sim[3, end]/patches
+    equilibre_rosiers[i] = sto_sim[4, end]/patches
+    for j in eachindex(s)
+        lines!(ax, sto_sim[j, :], color=states_colors[j], alpha=0.1)
     end
 end
 
 # Simulation déterministe
 
-det_sim = simulation(T, s; stochastic=false, generations=200)
+det_sim = simulation(T, s; stochastic=false, generations=100)
 for i in eachindex(s)
-    lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i])
+    lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i], linewidth=2)
 end
 
 # Paramètres pour le graphique : légende et limite des axes 
@@ -202,7 +204,11 @@ current_figure()
 # # Présentation des résultats
 
 # La figure suivante représente des valeurs aléatoires:
-
-#hist(randn(100))
+h = Figure()
+hist(h[1, 1], equilibre_vide, color = :grey40)
+hist(h[1, 2], equilibre_herbe, color = :orange)
+hist(h[2, 1], equilibre_pivoine, color = :teal)
+hist(h[2, 2], equilibre_rosiers, color = :pink)
+h
 
 # # Discussion
