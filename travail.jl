@@ -154,10 +154,10 @@ patches = sum(s)        # Nombre de parcelles
 
 # ## Matrice de transition
 T = zeros(Float32, states, states)
-T[1, :] = [0.81, 0.05, 0.09, 0.05]               # Probabilités depuis l'état vide
-T[2, :] = [0.76, 0.20, 0.03, 0.01]               # Probabilités depuis l'état herbe
-T[3, :] = [0.78, 0.10, 0.10, 0.02]               # Probabilités depuis l'état pivoine
-T[4, :] = [0.83, 0.02, 0.08, 0.07]               # Probabilités depuis l'état rosiers
+T[1, :] = [81, 5, 9, 5]               # Probabilités depuis l'état vide
+T[2, :] = [76, 20, 3, 1]              # Probabilités depuis l'état herbe
+T[3, :] = [78, 10, 9, 3]              # Probabilités depuis l'état pivoine
+T[4, :] = [83, 2, 6, 9]               # Probabilités depuis l'état rosiers
 
 # Noms et couleurs des états pour la légende
 
@@ -170,19 +170,19 @@ f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Simulation stochastique
-nb_sim = 1000
+nb_sim = 2000
 equilibre_vide = zeros(nb_sim)
 equilibre_herbe = zeros(nb_sim)
 equilibre_pivoine = zeros(nb_sim)
 equilibre_rosiers = zeros(nb_sim)
 
 for i in 1:nb_sim
-    sto_sim = simulation(T, s; stochastic=true, generations=100)
+    sto_sim = simulation(T, s; stochastic=true, generations=50)
 
-    equilibre_vide[i] = sto_sim[1, end]/patches
-    equilibre_herbe[i] = sto_sim[2, end]/patches
-    equilibre_pivoine[i] = sto_sim[3, end]/patches
-    equilibre_rosiers[i] = sto_sim[4, end]/patches
+    equilibre_vide[i] = sto_sim[1, end]/patches*100
+    equilibre_herbe[i] = sto_sim[2, end]/patches*100
+    equilibre_pivoine[i] = sto_sim[3, end]/patches*100
+    equilibre_rosiers[i] = sto_sim[4, end]/patches*100
     for j in eachindex(s)
         lines!(ax, sto_sim[j, :], color=states_colors[j], alpha=0.1)
     end
@@ -190,7 +190,7 @@ end
 
 # Simulation déterministe
 
-det_sim = simulation(T, s; stochastic=false, generations=100)
+det_sim = simulation(T, s; stochastic=false, generations=50)
 for i in eachindex(s)
     lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i], linewidth=2)
 end
@@ -202,13 +202,40 @@ tightlimits!(ax)
 current_figure()
 
 # # Présentation des résultats
+f
 
-# La figure suivante représente des valeurs aléatoires:
+# Figure 1 : Nombres d'états de chacunes des pacerelles à travers chaque générations 
+
+# À l'aide de la simulation déterministe, il est osbervable que chacun des états atteint son équilibre très rapidement, soit après moins
+# de 5 générations. Les nombreuses simulations stochastique semblent suivrent la simulation déterministe.
 h = Figure()
-hist(h[1, 1], equilibre_vide, color = :grey40)
-hist(h[1, 2], equilibre_herbe, color = :orange)
-hist(h[2, 1], equilibre_pivoine, color = :teal)
-hist(h[2, 2], equilibre_rosiers, color = :pink)
+hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
+hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
+hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
+hist(h[2, 2], equilibre_rosiers, color = :pink, axis = (title = "Équilibre Rosiers", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
 h
 
+# Figure 2 : Fréquence de chacun des états possibles des pacerelles selon leur pourcentage d'occupation à la fin des simulations stochastiques (en équilibre) 
+
+# À l'aide de ces 4 figures il est possible d'estimer quelle pourcentage des pacerelles est occupé par quel état à la fin des simulations.
+# Il y a environ 81% des pacerelles qui sont vides à l'équilibre, donc 19% qui sont végétalisés. Parmis cela, 6% qui sont couverts d'herbes,
+# envrion 8% qui sont couvert de pivoines et 5% des pacerlles qui sont des rosiers.
 # # Discussion
+
+# La population initiale choisi parmi les 200 pacerelles contenait 150 pacerelles vides, 40 d'herbes, 10 de pivoines et aucun rosiers. 
+# La matrice de transition contient ces valeurs :
+# [81,  5, 9, 5]
+# [76, 20, 3, 1]
+# [78, 10, 9, 3]
+# [83,  2, 6, 9] 
+# Comme la matrice de transition contient des valeurs qui garantissent très fortement les équilibres voulus, soit 80% vides, 6% herbes,
+# et au minimum 4,2% du buisson le moins abondant, la population intiale n'a peu dimportance dans l'atteinte des points d'équilibre désirés.
+# En effet, les valeurs de transitions ont été séléctionnées afin que pour chaque état dans lequel une pacerelle se trouve, les probabilités 
+# de transitionné vers un autre état sont fortement liées aux équilibres désirés. Cela explique donc pourquoi la simluation déterministe se
+# stabilisent très rapidement soit vers 5 générations et aussi pourquoi les simulations stochastiques suivent de très près la simluation 
+# détmerministe. Malgré le fait que les valeurs dans la matrice de transitions assurent l'attteinte des pourcentage attendues dans la 
+# majorité des cas, cela reflète peu une situation biologique réelle. En effet, le stade d'une plante est souvent plus linéaire, c'est à 
+# dire qu'une pacerrelle vide à beaucoup plus de chance rester vide ou bien de devenir un herbe à la prochaine génération et non de passer
+# à un stade de buisson directement. L'herbe, quant à elle, a plus de chance de rester de l'herbe, de redevenir vide, ou même de passer au premier
+# stade de buisson que de passer direcetemnt au deuxième stade de buisson. Alors que les valeurs de transitions séléctionnées assurent quasiment 
+# toujours les pourcentages désirés, ils ne reflètent pas du tout une situation réelle.

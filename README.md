@@ -9,7 +9,5 @@ Le corridor qu'on souhaite aménager se découpe en 200 parcelles, qui sont tout
 
 Identifiez (i) une population initiale et (ii) une matrice de transition, qui décrit les caractéristiques des espèces à planter, qui permettent de garantir que les critères fixés seront respectés dans au moins 80% des simulations. Comparez ces résultats aux résultats d'un modèle non stochastique.
 
-si site web se génère pas : setting -> page -> source -> action
-
 ## Abstract
 (résumé de l'introduction)
