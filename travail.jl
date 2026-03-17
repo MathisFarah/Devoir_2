@@ -194,7 +194,7 @@ states_colors = [:grey40, :orange, :teal, :pink]
 
 # ## Visualisation
 
-f = Figure(size = (800, 600))
+f = Figure()
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Simulation stochastique
@@ -243,7 +243,7 @@ f
 # À l'aide de la simulation déterministe, il est osbervable que chacun des états atteint son équilibre très rapidement, soit après moins
 # de 5 générations. Les nombreuses simulations stochastique semblent suivrent la simulation déterministe.
 
-h = Figure(size = (800, 600))
+h = Figure()
 hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
 hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
 hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
