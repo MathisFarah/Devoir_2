@@ -201,7 +201,7 @@ ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 ## Définition des arguments
 
-nb_sim = 25
+nb_sim = 2000
 equilibre_vide = zeros(nb_sim)
 equilibre_herbe = zeros(nb_sim)
 equilibre_pivoine = zeros(nb_sim)
@@ -255,6 +255,7 @@ current_figure()
 # À l'aide de ces 4 figures il est possible d'estimer quel pourcentage des parcelles est occupé par quel état est à la fin des simulations.
 # Il y a environ 81% des parcelles qui sont vides à l'équilibre, donc 19% qui sont végétalisées. Parmis cela, 6% qui sont couvertes d'herbes,
 # environ 8% qui sont couvertes de pivoines et 5% des parcelles qui sont des rosiers.
+
 # # Discussion
 
 # La population initiale choisi parmi les 200 parcelles contenait 150 parcelles vides, 40 d'herbes, 10 de pivoines et aucun rosiers. 
@@ -263,7 +264,7 @@ current_figure()
 # [76, 20, 3, 1]
 # [78, 10, 9, 3]
 # [83,  2, 6, 9] 
-# Comme la matrice de transition contient des valeurs qui garantissent très fortement les équilibres voulus, soit 80% vides, 6% herbes,
+# . Comme la matrice de transition contient des valeurs qui garantissent très fortement les équilibres voulus, soit 80% vides, 6% herbes,
 # et au minimum 4,2% du buisson le moins abondant, la population intiale n'a peu d'importance dans l'atteinte des points d'équilibre désirés.
 # En effet, les valeurs de transitions ont été séléctionnées pour que chaque état dans lequel une parcelle se trouve, les probabilités 
 # de transitionner vers un autre état sont fortement liées aux équilibres désirés. Cela explique pourquoi la simluation déterministe se
