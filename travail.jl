@@ -58,10 +58,15 @@ import Distributions
 using Distributions
 
 # ## Vérification de la matrice de transition
-# S'assurer que chaque ligne de la matrice a une somme de 1. Sinon, un message d'erreur apparaitera dans le terminal
-# Le "!" permet de modifier la matrice de la fonction en mémoire
 
-function check_transition_matrix!(T)
+"""
+check_transition_matrix!(T)
+
+Permet de s'assurer que chaque ligne de la matrice a une somme de 1. Sinon, un message d'erreur apparait dans le terminal
+
+T est la matrice de transition
+"""
+function check_transition_matrix!(T)                                                        ## Le "!" permet de modifier la matrice de la fonction en mémoire
     for ligne in axes(T, 1)
         if sum(T[ligne, :]) != 1
             @warn "La somme de la ligne $(ligne) n'est pas égale à 1 et a été modifiée"
