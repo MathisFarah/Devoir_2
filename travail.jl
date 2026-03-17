@@ -218,7 +218,7 @@ for i in 1:nb_sim
     equilibre_rosier[i] = sto_sim[4, end] / patches * 100
 
     for j in eachindex(s)
-        lines!(ax, sto_sim[j, :], color=states_colors[j], alpha=0.1)
+        lines!(ax, sto_sim[j, :], color=states_colors[j], alpha=0.01)
     end
 end
 
@@ -248,7 +248,7 @@ hist(h[1, 1], equilibre_vide, color=:grey40, axis=(title="Équilibre Vide", xlab
 hist(h[1, 2], equilibre_herbe, color=:orange, axis=(title="Équilibre Herbe", xlabel="Parcelles (%)", ylabel="Fréquence"))
 hist(h[2, 1], equilibre_pivoine, color=:teal, axis=(title="Équilibre Pivoine", xlabel="Parcelles (%)", ylabel="Fréquence"))
 hist(h[2, 2], equilibre_rosier, color=:pink, axis=(title="Équilibre Rosier", xlabel="Parcelles (%)", ylabel="Fréquence"))
-current_figure()
+h
 
 # Figure 2 : Histogrammes des fréquences des états possibles des parcelles selon leur pourcentage d'occupation pour 2000 simulations stochastiques (en équilibre) 
 
