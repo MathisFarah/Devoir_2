@@ -144,7 +144,7 @@ end
 """
 simulation(transitions, states; generations=500, stochastic=false)
 
-Effectue la simulation sur un nombre défini de générations (ici 500). Initialise la série temporelle et sélectionne le mode stochastique ou déterministe.
+Effectue la simulation sur un nombre défini de générations (ici 500 par défaut). Initialise la série temporelle et sélectionne le mode stochastique ou déterministe.
 
 'transitions' est la matrice de transition 
 'states' est le vecteur d'état initial 
@@ -233,7 +233,6 @@ end
 
 axislegend(ax)
 tightlimits!(ax)
-current_figure()
 
 # # Présentation des résultats
 
