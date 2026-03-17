@@ -1,3 +1,3 @@
 ## Abstract
 
-Une deuxième espèce de buisson est ajoutée dans un corridor sous une lignée électrique à haute tension. Des consignes doivent être respectées pour garantir la biodiversité et les réglements de sécurité. Ce nouveau corridor contient 200 parcelles vides et des critères concernant le pourcentage de la végétation qui doit être présente. Une simulation est est réalisée avec un modèle de la chaine de Markov pour s'assurer que les critères soient respectés dans 80% des simulations.
+Une deuxième espèce de buisson est ajoutée dans un corridor sous une lignée électrique à haute tension. Des consignes doivent être respectées pour garantir la biodiversité et les réglements de sécurité. Ce nouveau corridor contient 200 parcelles vides et des critères concernant le pourcentage de la végétation qui doit être présente. Une simulation est réalisée avec un modèle de la chaine de Markov pour s'assurer que les critères soient respectés dans 80% des simulations.

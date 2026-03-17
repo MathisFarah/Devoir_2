@@ -27,7 +27,7 @@
 # où chaque passerelle peut évoluer à différents états ; vide, herbe, pivoine ou rosier. Les parcelles transitent 
 # d'un état à un autre selon une matrice de probabilités. Le modèle peut être appliqué de manière déterministe 
 # avec des valeurs théoriques continues et de manière stochastique avec des nombres entiers, rendant le tout plus 
-# réaliste. La chaine de Markov est un processus sans mémoire, l'état futur de la pacerelle dépend seulement de son
+# réaliste. La chaine de Markov est un processus sans mémoire, l'état futur de la parcelle dépend seulement de son
 # état actuel @Balzter2000.
 
 # # Implémentation
@@ -36,7 +36,7 @@
 # avec les deux sortes de buisson (pivoine et rosier). L'objectif est que dans 80% des simulations, 
 # il doit avoir 20% des parcelles végétalisées (30% des herbes et 70% des buissons, dont au moins 30% de l'espèce 
 # minoritaire). Quelle doit être la population initiale et quelle sera la matrice de transition pour respecter cet 
-# objectif? Il doit y avoir une mélange équilibré entre les deux espèces de buissons à des probabilités de transitions 
+# objectif? Il doit y avoir un mélange équilibré entre les deux espèces de buissons à des probabilités de transitions 
 # favorables pour leur permettre de coexister.
 
 # # Code pour le modèle
@@ -78,7 +78,14 @@ end
 
 # ## Vérification des arguments
 # Programmation défensive : valide les contraintes des arguments et renvoie un message d'erreur si non
+"""
+check_function_arguments(transitions, states)
 
+Valide la cohérence des arguments. Vérifie que la matrice est carrée, que le nombre d'états correspond et qu'aucune probabilité de transition n'est négative.
+
+'transitions' est la matrice de transition
+'states' est le vecteur d'état initial 
+"""
 function check_function_arguments(transitions, states)
     if size(transitions, 1) != size(transitions, 2)
         throw("La matrice de transition n'est pas carrée")
@@ -94,13 +101,20 @@ function check_function_arguments(transitions, states)
             end
         end
     end
-    return nothing
+    return nothing                     ## Ne retourne rien si tout est valide
 end
 
 # ## Simulation stochastique
-# Pour chaque état, la fonction tire aléatoirement le nombre parcelles qui transitent d'un état 
-# à un autre avec une distribution multinomiale.
 
+"""
+_sim_stochastic!(timeseries, transitions, generation)
+
+Pour chaque état et générations, la fonction tire aléatoirement le nombre de parcelles qui transitent d'un état à un autre avec une distribution multinomiale.
+
+'timeseries' est la matrice des états x générations
+'transitions' est la matrice de transition 
+'generation' est le nombre de génération
+"""
 function _sim_stochastic!(timeseries, transitions, generation)
         for state in axes(timeseries, 1)
         pop_change = rand(Multinomial(timeseries[state, generation], transitions[state, :]))
@@ -109,8 +123,16 @@ function _sim_stochastic!(timeseries, transitions, generation)
 end
 
 # ## Simulation déterministe
-# Multiplie le vecteur d'état actuel par la matrice de transition
 
+"""
+_sim_determ!(timeseries, transitions, generation)
+
+Multiplie le vecteur d'état actuel par la matrice de transition.
+
+'timeseries' est la matrice des états x générations
+'transitions' est la matrice de transition 
+'generation' est le nombre de génération
+"""
 function _sim_determ!(timeseries, transitions, generation)
         pop_change = (timeseries[:, generation]' * transitions)'
         timeseries[:, generation+1] .= pop_change
@@ -119,20 +141,30 @@ end
 
 # ## Simulation
 
+"""
+simulation(transitions, states; generations=500, stochastic=false)
+
+Effectue la simulation sur un nombre défini de générations (ici 500). Initialise la série temporelle et sélectionne le mode stochastique ou déterministe.
+
+'transitions' est la matrice de transition 
+'states' est le vecteur d'état initial 
+'generation' est le nombre de génération
+'stochastic' si true utilise la simulation stochastique, mais par défaut est false donc déterministe
+"""
 function simulation(transitions, states; generations=500, stochastic=false)
     
     check_transition_matrix!(transitions)
     check_function_arguments(transitions, states)
 
-    _data_type = stochastic ? Int64 : Float32                           # Selon le type de données, choisi renvoie si stochastic est vrai ou faux
-    timeseries = zeros(_data_type, length(states), generations + 1)     # Créer une matrice vide pour stocker les résultats
-    timeseries[:, 1] = states                                           # Initialise la première colonne avec l'état initial
+    _data_type = stochastic ? Int64 : Float32                           ## Selon le type de données, choisi si renvoie stochastique (entier) ou déterministe (décimaux)
+    timeseries = zeros(_data_type, length(states), generations + 1)     ## Créer une matrice vide pour stocker les résultats
+    timeseries[:, 1] = states                                           ## Initialise la première colonne avec l'état initial
 
-# Séletionne la fonction de la simulation selon le mode
+## Sélectionne la fonction de la simulation selon le mode
 
     _sim_function! = stochastic ? _sim_stochastic! : _sim_determ!
 
-# Le faire sur plusieurs générations
+## Boucle pour le faire sur plusieurs générations
 
     for generation in Base.OneTo(generations)
         _sim_function!(timeseries, transitions, generation)
@@ -142,21 +174,22 @@ function simulation(transitions, states; generations=500, stochastic=false)
 end
 
 # ## États
-# Vide, Herbe, Pivoine, Rosiers
-s = [150, 40, 10, 0]         # Vecteur initial
-states = length(s)           # Nombre d'états
-patches = sum(s)             # Nombre de parcelles
+# Vide, Herbe, Pivoine, Rosier
+s = [150, 40, 10, 0]         ## Vecteur initial
+states = length(s)           ## Nombre d'états
+patches = sum(s)             ## Nombre de parcelles
 
 # ## Matrice de transition
+
 T = zeros(Float32, states, states)
-T[1, :] = [81, 5, 9, 5]               # Probabilités depuis l'état vide
-T[2, :] = [76, 20, 3, 1]              # Probabilités depuis l'état herbe
-T[3, :] = [78, 10, 9, 3]              # Probabilités depuis l'état pivoine
-T[4, :] = [83, 2, 6, 9]               # Probabilités depuis l'état rosiers
+T[1, :] = [81, 5, 9, 5]               ## Probabilités depuis l'état vide
+T[2, :] = [76, 20, 3, 1]              ## Probabilités depuis l'état herbe
+T[3, :] = [78, 10, 9, 3]              ## Probabilités depuis l'état pivoine
+T[4, :] = [83, 2, 6, 9]               ## Probabilités depuis l'état rosier
 
-# Noms et couleurs des états pour la légende
+## Noms et couleurs des états pour la légende
 
-states_names = ["Vide", "Herbe", "Pivoine", "Rosiers"]
+states_names = ["Vide", "Herbe", "Pivoine", "Rosier"]
 states_colors = [:grey40, :orange, :teal, :pink]
 
 # ## Visualisation
@@ -165,19 +198,25 @@ f = Figure(size = (800, 600))
 ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 # Simulation stochastique
+
+## Définition des arguments
+
 nb_sim = 2000
 equilibre_vide = zeros(nb_sim)
 equilibre_herbe = zeros(nb_sim)
 equilibre_pivoine = zeros(nb_sim)
-equilibre_rosiers = zeros(nb_sim)
+equilibre_rosier = zeros(nb_sim)
 
 for i in 1:nb_sim
     sto_sim = simulation(T, s; stochastic=true, generations=50)
+    
+    ## Calcule le pourcentage des parcelles dans chaque état 
 
     equilibre_vide[i] = sto_sim[1, end]/patches*100
     equilibre_herbe[i] = sto_sim[2, end]/patches*100
     equilibre_pivoine[i] = sto_sim[3, end]/patches*100
-    equilibre_rosiers[i] = sto_sim[4, end]/patches*100
+    equilibre_rosier[i] = sto_sim[4, end]/patches*100
+
     for j in eachindex(s)
         lines!(ax, sto_sim[j, :], color=states_colors[j], alpha=0.1)
     end
@@ -190,47 +229,50 @@ for i in eachindex(s)
     lines!(ax, det_sim[i, :], color=states_colors[i], alpha=1, label=states_names[i], linewidth=2)
 end
 
-# Paramètres pour le graphique : légende et limite des axes 
+## Paramètres pour le graphique : légende et limite des axes 
 
 axislegend(ax)
 tightlimits!(ax)
 current_figure()
 
 # # Présentation des résultats
+
 f
 
-# Figure 1 : Nombres d'états de chacunes des pacerelles à travers chaque générations 
+# Figure 1 : Nombres de parcelles dans chacun des états à travers les générations 
 
 # À l'aide de la simulation déterministe, il est osbervable que chacun des états atteint son équilibre très rapidement, soit après moins
 # de 5 générations. Les nombreuses simulations stochastique semblent suivrent la simulation déterministe.
+
 h = Figure(size = (800, 600))
-hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
-hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
-hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
-hist(h[2, 2], equilibre_rosiers, color = :pink, axis = (title = "Équilibre Rosiers", xlabel = "Pacerelles (%)", ylabel = "Fréquence"))
+hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
+hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
+hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
+hist(h[2, 2], equilibre_rosier, color = :pink, axis = (title = "Équilibre Rosier", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
+
 h
 
-# Figure 2 : Fréquence de chacun des états possibles des pacerelles selon leur pourcentage d'occupation à la fin des simulations stochastiques (en équilibre) 
+# Figure 2 : Histogrammes des fréquences des états possibles des parcelles selon leur pourcentage d'occupation pour 2000 simulations stochastiques (en équilibre) 
 
-# À l'aide de ces 4 figures il est possible d'estimer quelle pourcentage des pacerelles est occupé par quel état à la fin des simulations.
-# Il y a environ 81% des pacerelles qui sont vides à l'équilibre, donc 19% qui sont végétalisés. Parmis cela, 6% qui sont couverts d'herbes,
-# envrion 8% qui sont couvert de pivoines et 5% des pacerlles qui sont des rosiers.
+# À l'aide de ces 4 figures il est possible d'estimer quel pourcentage des parcelles est occupé par quel état est à la fin des simulations.
+# Il y a environ 81% des parcelles qui sont vides à l'équilibre, donc 19% qui sont végétalisées. Parmis cela, 6% qui sont couvertes d'herbes,
+# environ 8% qui sont couvertes de pivoines et 5% des parcelles qui sont des rosiers.
 # # Discussion
 
-# La population initiale choisi parmi les 200 pacerelles contenait 150 pacerelles vides, 40 d'herbes, 10 de pivoines et aucun rosiers. 
+# La population initiale choisi parmi les 200 parcelles contenait 150 parcelles vides, 40 d'herbes, 10 de pivoines et aucun rosiers. 
 # La matrice de transition contient ces valeurs :
 # [81,  5, 9, 5]
 # [76, 20, 3, 1]
 # [78, 10, 9, 3]
 # [83,  2, 6, 9] 
 # Comme la matrice de transition contient des valeurs qui garantissent très fortement les équilibres voulus, soit 80% vides, 6% herbes,
-# et au minimum 4,2% du buisson le moins abondant, la population intiale n'a peu dimportance dans l'atteinte des points d'équilibre désirés.
-# En effet, les valeurs de transitions ont été séléctionnées afin que pour chaque état dans lequel une pacerelle se trouve, les probabilités 
-# de transitionné vers un autre état sont fortement liées aux équilibres désirés. Cela explique donc pourquoi la simluation déterministe se
-# stabilisent très rapidement soit vers 5 générations et aussi pourquoi les simulations stochastiques suivent de très près la simluation 
-# détmerministe. Malgré le fait que les valeurs dans la matrice de transitions assurent l'attteinte des pourcentage attendues dans la 
+# et au minimum 4,2% du buisson le moins abondant, la population intiale n'a peu d'importance dans l'atteinte des points d'équilibre désirés.
+# En effet, les valeurs de transitions ont été séléctionnées pour que chaque état dans lequel une parcelle se trouve, les probabilités 
+# de transitionner vers un autre état sont fortement liées aux équilibres désirés. Cela explique pourquoi la simluation déterministe se
+# stabilise très rapidement soit vers 5 générations et aussi pourquoi les simulations stochastiques suivent de très près la simluation 
+# détmerministe. Malgré le fait que les valeurs dans la matrice de transitions assurent l'atteinte des pourcentage attendues dans la 
 # majorité des cas, cela reflète peu une situation biologique réelle. En effet, le stade d'une plante est souvent plus linéaire, c'est à 
-# dire qu'une pacerrelle vide à beaucoup plus de chance rester vide ou bien de devenir un herbe à la prochaine génération et non de passer
+# dire qu'une parcelle vide à beaucoup plus de chance rester vide ou bien de devenir un herbe à la prochaine génération et non de passer
 # à un stade de buisson directement. L'herbe, quant à elle, a plus de chance de rester de l'herbe, de redevenir vide, ou même de passer au premier
 # stade de buisson que de passer direcetemnt au deuxième stade de buisson. Alors que les valeurs de transitions séléctionnées assurent quasiment 
-# toujours les pourcentages désirés, ils ne reflètent pas du tout une situation réelle.
+# toujours les pourcentages désirés, elles ne reflètent pas du tout une situation réelle.
