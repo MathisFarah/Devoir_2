@@ -116,7 +116,7 @@ Pour chaque état et générations, la fonction tire aléatoirement le nombre de
 'generation' est le nombre de génération
 """
 function _sim_stochastic!(timeseries, transitions, generation)
-        for state in axes(timeseries, 1)
+    for state in axes(timeseries, 1)
         pop_change = rand(Multinomial(timeseries[state, generation], transitions[state, :]))
         timeseries[:, generation+1] .+= pop_change
     end
@@ -134,8 +134,8 @@ Multiplie le vecteur d'état actuel par la matrice de transition.
 'generation' est le nombre de génération
 """
 function _sim_determ!(timeseries, transitions, generation)
-        pop_change = (timeseries[:, generation]' * transitions)'
-        timeseries[:, generation+1] .= pop_change
+    pop_change = (timeseries[:, generation]' * transitions)'
+    timeseries[:, generation+1] .= pop_change
 
 end
 
@@ -152,7 +152,7 @@ Effectue la simulation sur un nombre défini de générations (ici 500 par défa
 'stochastic' si true utilise la simulation stochastique, mais par défaut est false donc déterministe
 """
 function simulation(transitions, states; generations=500, stochastic=false)
-    
+
     check_transition_matrix!(transitions)
     check_function_arguments(transitions, states)
 
@@ -160,11 +160,11 @@ function simulation(transitions, states; generations=500, stochastic=false)
     timeseries = zeros(_data_type, length(states), generations + 1)     ## Créer une matrice vide pour stocker les résultats
     timeseries[:, 1] = states                                           ## Initialise la première colonne avec l'état initial
 
-## Sélectionne la fonction de la simulation selon le mode
+    ## Sélectionne la fonction de la simulation selon le mode
 
     _sim_function! = stochastic ? _sim_stochastic! : _sim_determ!
 
-## Boucle pour le faire sur plusieurs générations
+    ## Boucle pour le faire sur plusieurs générations
 
     for generation in Base.OneTo(generations)
         _sim_function!(timeseries, transitions, generation)
@@ -201,7 +201,7 @@ ax = Axis(f[1, 1], xlabel="Nb. générations", ylabel="Nb. parcelles")
 
 ## Définition des arguments
 
-nb_sim = 2000
+nb_sim = 25
 equilibre_vide = zeros(nb_sim)
 equilibre_herbe = zeros(nb_sim)
 equilibre_pivoine = zeros(nb_sim)
@@ -209,13 +209,13 @@ equilibre_rosier = zeros(nb_sim)
 
 for i in 1:nb_sim
     sto_sim = simulation(T, s; stochastic=true, generations=50)
-    
+
     ## Calcule le pourcentage des parcelles dans chaque état 
 
-    equilibre_vide[i] = sto_sim[1, end]/patches*100
-    equilibre_herbe[i] = sto_sim[2, end]/patches*100
-    equilibre_pivoine[i] = sto_sim[3, end]/patches*100
-    equilibre_rosier[i] = sto_sim[4, end]/patches*100
+    equilibre_vide[i] = sto_sim[1, end] / patches * 100
+    equilibre_herbe[i] = sto_sim[2, end] / patches * 100
+    equilibre_pivoine[i] = sto_sim[3, end] / patches * 100
+    equilibre_rosier[i] = sto_sim[4, end] / patches * 100
 
     for j in eachindex(s)
         lines!(ax, sto_sim[j, :], color=states_colors[j], alpha=0.1)
@@ -244,12 +244,11 @@ f
 # de 5 générations. Les nombreuses simulations stochastique semblent suivrent la simulation déterministe.
 
 h = Figure()
-hist(h[1, 1], equilibre_vide, color = :grey40, axis = (title = "Équilibre Vide", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
-hist(h[1, 2], equilibre_herbe, color = :orange, axis = (title = "Équilibre Herbe", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
-hist(h[2, 1], equilibre_pivoine, color = :teal, axis = (title = "Équilibre Pivoine", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
-hist(h[2, 2], equilibre_rosier, color = :pink, axis = (title = "Équilibre Rosier", xlabel = "Parcelles (%)", ylabel = "Fréquence"))
-
-h
+hist(h[1, 1], equilibre_vide, color=:grey40, axis=(title="Équilibre Vide", xlabel="Parcelles (%)", ylabel="Fréquence"))
+hist(h[1, 2], equilibre_herbe, color=:orange, axis=(title="Équilibre Herbe", xlabel="Parcelles (%)", ylabel="Fréquence"))
+hist(h[2, 1], equilibre_pivoine, color=:teal, axis=(title="Équilibre Pivoine", xlabel="Parcelles (%)", ylabel="Fréquence"))
+hist(h[2, 2], equilibre_rosier, color=:pink, axis=(title="Équilibre Rosier", xlabel="Parcelles (%)", ylabel="Fréquence"))
+current_figure()
 
 # Figure 2 : Histogrammes des fréquences des états possibles des parcelles selon leur pourcentage d'occupation pour 2000 simulations stochastiques (en équilibre) 
 
